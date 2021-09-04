@@ -85,8 +85,8 @@ float LinuxParser::MemoryUtilization() {
   }
 
   MemoFile.close();
-  return memory = MemTotal - MemFree;
   // return memory;
+  return memory = MemTotal - MemFree;
 }
 
 // TODO: Read and return the system uptime
