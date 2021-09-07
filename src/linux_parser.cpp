@@ -1,16 +1,19 @@
+#include "linux_parser.h"
+
 #include <dirent.h>
 #include <unistd.h>
+
 #include <sstream>
 #include <string>
-#include <vector>
 #include <unordered_map>
-
-#include "linux_parser.h"
+#include <vector>
+#include <iostream> // NOTE: remove me
 
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+using std::cout;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -70,23 +73,40 @@ vector<int> LinuxParser::Pids() {
 
 // TODO: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
-  std::unordered_map<string, float> MemMap;
+  float data;
+  std::string key, size, line;
+  std::vector<std::string> keys{
+      "MemTotal:", "MemFree:", "MemAvailable:", "Buffers:"};
+  std::unordered_map<string, float> FileMap;
 
-  unsigned int MemFree = 0, MemTotal = 0, MemAvail = 0, BUffers = 0;
-  string key;
-  float data = 0.0;
-  float memory = 0.0;
-
-  string line;
-
-  std::ifstream MemoFile(LinuxParser::kProcDirectory + LinuxParser::kMeminfoFilename);
-  if (MemoFile.is_open()) {
-    while (MemoFile >> key >> data) MemMap[key] = data;
+  std::ifstream MemFile(LinuxParser::kProcDirectory +
+                        LinuxParser::kMeminfoFilename);
+  if (MemFile.is_open()) {
+    std::cout << "Reading: /proc/meminfo in:" << std::endl;
+    while (std::getline(MemFile, line)) {
+      while (MemFile >> key >> data >> size) FileMap[key] = data;
+      //  FileMap.insert(std::make_pair(key, data));
+    }
   }
 
-  MemoFile.close();
+  if (!FileMap.empty()) {
+    std::cout << "the map size is " << FileMap.size() << "\n\n";
+    for (auto& it : keys) {
+      for (const auto& elem : FileMap) {
+        if (elem.first == it) {
+          std::cout << "Keyz is: " << it << "\n";
+          // std::cout << elem.first << " " << elem.second << std::endl;
+        }
+      }
+    }
+  } else {
+    std::cout << "The Map is empty, there was an error." << std::endl;
+    exit(1);
+  }
+
+  MemFile.close();
   // return memory;
-  return memory = MemTotal - MemFree;
+  return 0.0;
 }
 
 // TODO: Read and return the system uptime
@@ -97,7 +117,7 @@ long LinuxParser::Jiffies() { return 0; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }
@@ -116,20 +136,20 @@ int LinuxParser::RunningProcesses() { return 0; }
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Command(int pid [[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid [[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Uid(int pid [[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid [[maybe_unused]]) { return 0; }
