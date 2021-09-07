@@ -3,17 +3,17 @@
 #include <dirent.h>
 #include <unistd.h>
 
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <iostream> // NOTE: remove me
 
+using std::cout;
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
-using std::cout;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -71,46 +71,41 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
+// Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
-  float data, memory = 0.0;
+  float data, MemTotal = 0.0f, MemFree = 0.0f;
   std::string key, size, line;
-  std::vector<std::string> keys{
-      "MemTotal:", "MemFree:", "MemAvailable:", "Buffers:"};
+  const std::string keys[3] = {"MemTotal:", "MemFree:"};
+
   std::unordered_map<string, float> FileMap;
 
   std::ifstream MemFile(LinuxParser::kProcDirectory +
                         LinuxParser::kMeminfoFilename);
+
+  // Read the file and store the data in an unordered_map
   if (MemFile.is_open()) {
-    std::cout << "Reading: /proc/meminfo in:" << std::endl;
     while (std::getline(MemFile, line)) {
       while (MemFile >> key >> data >> size) FileMap[key] = data;
-      //  FileMap.insert(std::make_pair(key, data));
     }
   }
 
+  // NOTE: Needs to find out why it won't take the first element "MemTotal".
+  // Go through the map, compare the elements, retrieve Memtotal and MemFree .
   if (!FileMap.empty()) {
-    std::cout << "the map size is " << FileMap.size() << "\n\n";
     for (auto& it : keys) {
       for (const auto& elem : FileMap) {
-        if (elem.first == it) {
-          // NOTE: FInd out why it won't print the first element "MemTotal".
-          std::cout << "Keyz is: " << it << "\n"; // HACK: Remove me.
-          // std::cout << elem.first << " " << elem.second << std::endl;
-          // TODO: Declare variables to store the data. 
-          // float MemTotal = elem.second;
-          // float MemFree = elem.second;
-          // memory = MemTotal - MemFree
-        }
+        if (elem.first == keys[0]) MemTotal = elem.second;
+        if (elem.first == keys[1]) MemFree = elem.second;
       }
     }
   } else {
-    std::cout << "Error: Map is empty." << std::endl;
+    cout << "Error: Map is empty." << std::endl;
     exit(1);
   }
 
   MemFile.close();
-  return memory;
+
+  return MemTotal - MemFree;
 }
 
 // TODO: Read and return the system uptime
