@@ -73,7 +73,7 @@ vector<int> LinuxParser::Pids() {
 
 // TODO: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
-  float data;
+  float data, memory = 0.0;
   std::string key, size, line;
   std::vector<std::string> keys{
       "MemTotal:", "MemFree:", "MemAvailable:", "Buffers:"};
@@ -94,19 +94,22 @@ float LinuxParser::MemoryUtilization() {
     for (auto& it : keys) {
       for (const auto& elem : FileMap) {
         if (elem.first == it) {
-          std::cout << "Keyz is: " << it << "\n";
+          std::cout << "Keyz is: " << it << "\n"; // HACK: Remove me.
           // std::cout << elem.first << " " << elem.second << std::endl;
+          // TODO: Declare variables to store the data. 
+          // float MemTotal = elem.second;
+          // float MemFree = elem.second;
+          // memory = MemTotal - MemFree
         }
       }
     }
   } else {
-    std::cout << "The Map is empty, there was an error." << std::endl;
+    std::cout << "Error: Map is empty." << std::endl;
     exit(1);
   }
 
   MemFile.close();
-  // return memory;
-  return 0.0;
+  return memory;
 }
 
 // TODO: Read and return the system uptime
