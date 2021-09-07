@@ -94,6 +94,7 @@ float LinuxParser::MemoryUtilization() {
     for (auto& it : keys) {
       for (const auto& elem : FileMap) {
         if (elem.first == it) {
+          // NOTE: FInd out why it won't print the first element "MemTotal".
           std::cout << "Keyz is: " << it << "\n"; // HACK: Remove me.
           // std::cout << elem.first << " " << elem.second << std::endl;
           // TODO: Declare variables to store the data. 
