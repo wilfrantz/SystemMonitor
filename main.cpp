@@ -4,14 +4,16 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <unistd.h>
 
 // NOTE: Use as sanbox will delete later.
+long UpTime();
 
 int main() {
   std::ifstream MemFile("/proc/meminfo");
   float data, memory = 0.0f, MemTotal = 0.0f, MemFree = 0.0f, MemAvail = 0.0f;
   std::string key, size, line;
-  std::string keys[5] = {"MemTotal:", "MemFree:"};
+  const std::string keys[5] = {"MemTotal:", "MemFree:"};
 
   std::unordered_map<std::string, float> FileMap;
 
@@ -38,6 +40,22 @@ int main() {
 
   std::cout << "Memory is " << MemTotal - MemFree << "\n";
 
+  std::cout << "The system uptime is: " << UpTime() << std::endl;
+
   MemFile.close();
   return 0;
+}
+
+long UpTime() {
+  std::string line, sysTime;
+  std::ifstream TimeFile("/proc/uptime");
+  if (TimeFile.is_open()) {
+    while (std::getline(TimeFile, line)) {
+      std::istringstream linestream(line);
+      linestream >> sysTime;
+    }
+  }
+
+  TimeFile.close();
+  return std::stol(sysTime);
 }
