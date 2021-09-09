@@ -126,7 +126,12 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies() { 
+  long jiffies = 0;
+  
+  
+  return jiffies; 
+  }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
@@ -141,8 +146,21 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+// Done: Read and return the total number of processes
+int LinuxParser::TotalProcesses() {
+  std::string line, process, key;
+
+  std::ifstream memFile(LinuxParser::kProcDirectory +
+                        LinuxParser::kStatFilename);
+  if (memFile.is_open()) {
+    while (std::getline(memFile, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> process)
+        if (key == "process") return std::stol(process);
+    }
+  }
+  return (-1);
+}
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { return 0; }
