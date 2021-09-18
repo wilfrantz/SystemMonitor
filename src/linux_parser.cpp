@@ -75,14 +75,13 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() {
   float data, MemTotal = 0.0f, MemFree = 0.0f;
   std::string key, size, line;
-  const std::string keys[3] = {"MemTotal:", "MemFree:"};
-
   std::unordered_map<string, float> FileMap;
+  const std::string keys[3] = {"MemTotal:", "MemFree:"};
 
   std::ifstream MemFile(LinuxParser::kProcDirectory +
                         LinuxParser::kMeminfoFilename);
 
-  // Read the file and store the data in an unordered_map
+  // Read the file and store the data in FileMap 
   if (MemFile.is_open()) {
     while (std::getline(MemFile, line)) {
       while (MemFile >> key >> data >> size) FileMap[key] = data;
