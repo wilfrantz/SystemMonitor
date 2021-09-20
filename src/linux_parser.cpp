@@ -14,6 +14,7 @@ using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+using std::stol;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -125,12 +126,19 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { 
+long LinuxParser::Jiffies() {
   long jiffies = 0;
-  
-  
-  return jiffies; 
+  std::string line, key, data;
+  std::ifstream jif_file(LinuxParser::kProcDirectory +
+                         LinuxParser::kTimerListFilename);
+
+  if (jif_file.is_open()) {
+    while (std::getline(jif_file, line)) jif_file >> key >> data;
   }
+
+  jif_file.close();
+  return stol(data);
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
