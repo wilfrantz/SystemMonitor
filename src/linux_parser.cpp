@@ -126,18 +126,24 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
+// NOTE: Unable to read the file on local machine due to file permission. 
 long LinuxParser::Jiffies() {
-  long jiffies = 0;
   std::string line, key, data;
   std::ifstream jif_file(LinuxParser::kProcDirectory +
                          LinuxParser::kTimerListFilename);
-
   if (jif_file.is_open()) {
-    while (std::getline(jif_file, line)) jif_file >> key >> data;
+    while (std::getline(jif_file, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> data) {
+        if (key == "jiffies") {
+          jif_file.close();
+          return stol(data);
+        }
+      }
+    }
   }
 
-  jif_file.close();
-  return stol(data);
+  return (-1);
 }
 
 // TODO: Read and return the number of active jiffies for a PID
@@ -148,10 +154,17 @@ long LinuxParser::ActiveJiffies(int pid [[maybe_unused]]) { return 0; }
 long LinuxParser::ActiveJiffies() { return 0; }
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+long LinuxParser::IdleJiffies() {
+  std::vector<string> line = LinuxParser::CpuUtilization();
+  std::vector<long> cpuJiffies;
+  return 0;
+}
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<string> LinuxParser::CpuUtilization() { 
+  std::ifstream cpuFile(LinuxParser::kProcDirectory + LinuxParser::kStatFilename);
+  return {}; 
+  }
 
 // Done: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
