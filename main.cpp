@@ -12,28 +12,23 @@
 // NOTE: Use as sanbox will delete later.
 
 int main() {
-
+  std::cout << LinuxParser::Uid(2364) << std::endl;
+  return 0;
 }
 
-std::vector<std::string> LinuxParser::CpuUtilization() {
-  std::vector<std::string> CpuUse;
-
-  std::ifstream cpuFile(LinuxParser::kProcDirectory +
-                        LinuxParser::kStatFilename);
-  if (cpuFile.is_open()) {
-    std::string line, key, data;
-    while (std::getline(cpuFile, line)) {
-      std::istringstream cpuStream(line);
-      while (cpuStream >> key) {
-        if (key == "cpu") {
-          for (int i = 0; i < LinuxParser::CPUStates::kGuestNice_; i++) {
-            std::string data;
-            cpuStream >> data;
-            CpuUse.push_back(data);
-          }
-        }
-      }
+// TODO: Read and return the user ID associated with a process
+// REMOVE: [[maybe_unused]] once you define the function
+std::string LinuxParser::Uid(int pid) {
+  std::string Uid, line, key;
+  std::ifstream UidFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                        LinuxParser::kStatusFilename);
+  if (UidFile.is_open()) {
+    while (std::getline(UidFile, line)) {
+      std::istringstream UidStream(line);
+      while (UidStream >> key >> Uid)
+        if (key == "Uid:") return Uid;
     }
+
   }
-  return CpuUse;
+    return " ";
 }
