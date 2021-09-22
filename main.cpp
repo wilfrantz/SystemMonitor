@@ -12,9 +12,7 @@
 // NOTE: Use as sanbox will delete later.
 
 int main() {
-  std::vector<std::string> data = LinuxParser::CpuUtilization();
 
-  for (int i = 0; i < data.size(); i++) std::cout << data[i] << " " << std::endl;
 }
 
 std::vector<std::string> LinuxParser::CpuUtilization() {
