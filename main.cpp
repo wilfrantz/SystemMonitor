@@ -12,23 +12,41 @@
 // NOTE: Use as sanbox will delete later.
 
 int main() {
-  std::cout << LinuxParser::Uid(2364) << std::endl;
+  std::cout << LinuxParser::UpTime(2364) << std::endl;
   return 0;
 }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-std::string LinuxParser::Uid(int pid) {
-  std::string Uid, line, key;
-  std::ifstream UidFile(LinuxParser::kProcDirectory + std::to_string(pid) +
-                        LinuxParser::kStatusFilename);
-  if (UidFile.is_open()) {
-    while (std::getline(UidFile, line)) {
-      std::istringstream UidStream(line);
-      while (UidStream >> key >> Uid)
-        if (key == "Uid:") return Uid;
-    }
+long LinuxParser::UpTime(int pid) {
+  std::string line;
+  std::ifstream UpFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                       LinuxParser::kStatFilename);
 
-  }
-    return " ";
+  if (UpFile.is_open()) std::getline(UpFile, line);
+
+  return stol(line) / sysconf(_SC_CLK_TCK);
 }
+
+/*
+long LinuxParser::UpTimes(int pid) {
+  std::string line;
+  std::ifstream UpFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                       LinuxParser::kStatFilename);
+
+  if (UpFile.is_open()) {
+    while (std::getline(UpFile, line)) {
+      std::cout << "here: " << line << std::endl;
+      int pos = line.find(pid);
+      std::cout << "There: " << std::stol(line) / sysconf(_SC_CLK_TCK)<< std::endl;
+      std::istringstream upstream(line);
+      std::string data;
+      exit (0);
+      std::istringstream upstream(line);
+      // for (int i = 0; i < 52; i++) upstream >> data;
+      // std::cout << "here: " << data << std::endl;
+      exit (0);
+    }
+  }
+    // return stol(data) / sysconf(_SC_CLK_TCK);
+    return 0;
+}
+*/
