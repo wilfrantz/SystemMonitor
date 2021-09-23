@@ -256,15 +256,26 @@ string LinuxParser::Uid(int pid) {
       while (UidStream >> key >> Uid)
         if (key == "Uid:") return Uid;
     }
-
   }
-    return " ";
+  return " ";
 }
 
-  // TODO: Read and return the user associated with a process
-  // REMOVE: [[maybe_unused]] once you define the function
-  string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
+// TODO: Read and return the user associated with a process
+// REMOVE: [[maybe_unused]] once you define the function
+string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
 
-  // TODO: Read and return the uptime of a process
-  // REMOVE: [[maybe_unused]] once you define the function
-  long LinuxParser::UpTime(int pid [[maybe_unused]]) { return 0; }
+// TODO: Read and return the uptime of a process
+// REMOVE: [[maybe_unused]] once you define the function
+long LinuxParser::UpTime(int pid) {
+  std::string line, key, data;
+  std::ifstream UpFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                       LinuxParser::kStatFilename);
+
+  if (UpFile.is_open()) {
+    while (std::getline(UpFile, line)) {
+      std::istringstream upstream(line);
+      while (upstream >> key >> data)
+        if (key ==) }
+  }
+  return sysconf(_SC_CLK_TCK);
+}
