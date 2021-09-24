@@ -12,16 +12,39 @@
 // NOTE: Use as sanbox will delete later.
 
 int main() {
-  std::cout << LinuxParser::UpTime(2364) << std::endl;
+  std::cout << LinuxParser::User(120) << std::endl;
   return 0;
 }
 
-long LinuxParser::UpTime(int pid) {
-  std::string line;
-  std::ifstream UpFile(LinuxParser::kProcDirectory + std::to_string(pid) +
-                       LinuxParser::kStatFilename);
+std::string LinuxParser::User(int pid) {
 
-  if (UpFile.is_open()) std::getline(UpFile, line);
+  std::string Uid;
 
-  return stol(line) / sysconf(_SC_CLK_TCK);
+  // Get the Uid from StatusFile.
+  std::ifstream StatusFile(LinuxParser::kProcDirectory + std::to_string(pid) +
+                           LinuxParser::kStatusFilename);
+  if (StatusFile.is_open()) {
+    std::string key, line, value;
+    while (std::getline(StatusFile, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream statusStream(line);
+      while (statusStream >> key >> value) {
+        if (key == "Uid") Uid = value;
+      }
+    }
+  }
+
+  // Get the userName from /etc/passwd
+  std::ifstream pwdFile(LinuxParser::kPasswordPath);
+  if (pwdFile.is_open()) {
+    std::string userName, x, line, value;
+    while (std::getline(pwdFile, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream pwdStream(line);
+      while (pwdStream >> userName >> x >> value) {
+        if (value == Uid) return userName;
+      }
+    }
+  }
+  return " ";
 }
