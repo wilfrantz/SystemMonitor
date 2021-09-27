@@ -72,7 +72,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// Done: Read and return the system memory utilization
+// DONE: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
   float data, MemTotal = 0.0f, MemFree = 0.0f;
   std::string key, size, line;
@@ -145,16 +145,21 @@ long LinuxParser::Jiffies() {
   return (-1);
 }
 
-// TODO: Read and return the number of active jiffies for a PID
+// DONE: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid) {
+  std::string line, data;
+  std::vector<string> activeJiffies;
+
   std::ifstream jif_file(LinuxParser::kProcDirectory + std::to_string(pid) +
                          LinuxParser::kStatFilename);
   if (jif_file.is_open()) {
-    std::string line;
-    while (std::getline(jif_file, line)) std::istringstream fileStream(line);
+    while (std::getline(jif_file, line)) {
+      std::istringstream jifStream(line);
+      while (jifStream >> data) activeJiffies.push_back(data);
+    }
   }
-  return 0;
+  return std::stol(activeJiffies[13] + activeJiffies[14]);
 }
 
 // DONE: Read and return the number of active jiffies for the system
