@@ -284,7 +284,6 @@ string LinuxParser::Uid(int pid) {
 // DONE: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
 std::string LinuxParser::User(int pid) {
-
   std::string Uid;
 
   // Get the Uid from StatusFile.
