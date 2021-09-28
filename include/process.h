@@ -18,9 +18,8 @@ class Process {
 
   // TODO: Declare any necessary private members
  private:
-  float _cpu;
+  float _uTime, sTime, cuTime, cstime, hertz _starttime = 0.0;
   int _pid;
-  std::string _username, _cmd;
 };
 
 #endif
