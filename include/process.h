@@ -2,6 +2,10 @@
 #define PROCESS_H
 
 #include <string>
+#include <vector>
+
+#inline "linux_parser.h"
+
 /*
 Basic class for Process representation
 It contains relevant attributes as shown below
@@ -18,7 +22,6 @@ class Process {
 
   // TODO: Declare any necessary private members
  private:
-  float _uTime, sTime, cuTime, cstime, hertz _starttime = 0.0;
   int _pid;
 };
 
