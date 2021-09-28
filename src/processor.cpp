@@ -1,12 +1,24 @@
 #include "processor.h"
 
+Processor::Processor()
+    : _pIdle(LinuxParser::IdleJiffies()),
+      _pNonIdle(LinuxParser::ActiveJiffies()),
+      _pTotal(_pIdle + _pNonIdle) {}
+
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-  long cActive = LinuxParser::activeJiffies();
-  long cIddle = LinuxParser::IdleJiffies();
-  long cTotal = cActive + cIddle;
+  long cActive = LinuxParser::ActiveJiffies();
+  long cIdle = LinuxParser::IdleJiffies();
+  long cTotal = cActive + cIdle;
 
-  long cpu = cTotal == 0 ? return cpu : return (cTotal - cIddle) / cTotal;
+  long idle_ = cIdle - _pIdle;
+  long total_ = cTotal - _pTotal;
 
-  return 0.0;
+  _pIdle = cIdle;
+  _pNonIdle = cActive;
+  _pTotal = cTotal;
+
+  long cpu = total_ == 0 ? 0.0 : (total_ - idle_) / total_;
+
+  return cpu;
 }
