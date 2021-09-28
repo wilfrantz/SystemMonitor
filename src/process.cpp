@@ -7,13 +7,13 @@
 #include <string>
 #include <vector>
 
-#include "LinuxParser.h"
+#include "linux_parser.h"
 
 using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int id) { return _pid(id); }
+Process::Process(const int id) : _pid(id) {}
 
 // DONE: Return this process's ID
 int Process::Pid() { return this->_pid; }
@@ -41,6 +41,4 @@ long int Process::UpTime() { return LinuxParser::UpTime(this->_pid); }
 
 // DONE: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const {
-  return LinuxParser::CpuUtilization < a._cpu;
-}
+bool Process::operator<(Process const& a) const { return this->_cpu < a._cpu; }

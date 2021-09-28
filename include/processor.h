@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "LinuxParser.h"
+#include "linux_parser.h"
 
 class Processor {
  public:
