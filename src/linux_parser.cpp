@@ -120,11 +120,10 @@ long LinuxParser::UpTime() {
       linestream >> sysTime;
     }
   }
-  TimeFile.close();
   return stol(sysTime);
 }
 
-// TODO: Read and return the number of jiffies for the system
+// DONE: Read and return the number of jiffies for the system
 // NOTE: Unable to read the file on local machine due to file permission.
 long LinuxParser::Jiffies() {
   std::string line, key, data;
