@@ -5,7 +5,7 @@ Processor::Processor()
       _pNonIdle(LinuxParser::ActiveJiffies()),
       _pTotal(_pIdle + _pNonIdle) {}
 
-// TODO: Return the aggregate CPU utilization
+// DONE: Return the aggregate CPU utilization
 float Processor::Utilization() {
   long cActive = LinuxParser::ActiveJiffies();
   long cIdle = LinuxParser::IdleJiffies();
