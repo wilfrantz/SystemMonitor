@@ -1,6 +1,9 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#include <unistd.h>
+#include <cstddef>
+#include <set>
 #include <string>
 #include <vector>
 
