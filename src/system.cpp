@@ -23,9 +23,6 @@ vector<Process>& System::Processes() {
 
   for (Process pro : this->processes_) pro.CpuUtilization();
 
-  std::sort(this->processes_.begin(), this->processes_.end(),
-            std::greater<Process>());
-
   return this->processes_;
 }
 
